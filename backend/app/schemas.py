@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import Optional, List
 
 # -------- Perfume --------
 class PerfumeBase(BaseModel):
@@ -15,6 +15,13 @@ class Perfume(PerfumeBase):
     id: int
     class Config:
         orm_mode = True
+
+class PerfumeUpdate(BaseModel):
+    name: Optional[str] = None
+    brand: Optional[str] = None
+    total_ml_available: Optional[float] = Field(default=None, ge=0)
+    allowed_sizes: Optional[List[float]] = None
+
 
 # -------- Checkout / Order --------
 class CheckoutRequest(BaseModel):
