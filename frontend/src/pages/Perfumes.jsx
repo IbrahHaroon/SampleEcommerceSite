@@ -1,7 +1,8 @@
 // src/pages/Perfumes.jsx
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Droplet, AlertCircle, Check, X } from 'lucide-react';
+import { ShoppingCart, Droplet, AlertCircle, Check, X, Heart } from 'lucide-react';
 import { getPerfumes, createPerfume, deletePerfume } from "../api";
+import '../styles/globals.css';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -12,6 +13,8 @@ export default function PerfumeDecantShop() {
   const [cart, setCart] = useState([]);
   const [notification, setNotification] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchPerfumes();
@@ -47,7 +50,138 @@ export default function PerfumeDecantShop() {
     };
     setCart([...cart, cartItem]);
     showNotification(`Added ${size}ml of ${perfume.name} to cart`);
+    
+    // Animate the cart icon
+    const cartIcon = document.querySelector('.cart-icon');
+    if (cartIcon) {
+      cartIcon.classList.add('scale-up');
+      setTimeout(() => cartIcon.classList.remove('scale-up'), 300);
+    }
   };
+
+  const filteredPerfumes = perfumes.filter(perfume => {
+    const matchesSearch = perfume.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         perfume.brand.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || perfume.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  if (loading) return (
+    <div className="container section">
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="loading-spinner"></div>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="container section">
+      <div className="flex items-center justify-center min-h-[60vh] text-error">
+        <AlertCircle className="w-6 h-6 mr-2" />
+        <p>{error}</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="fade-in">
+      {/* Hero Section */}
+      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#000000] to-[#1a1a1a] opacity-50"></div>
+        <div className="container relative z-10 text-white text-center">
+          <h1 className="text-5xl font-bold mb-4">Luxury Fragrance Decants</h1>
+          <p className="text-xl mb-8">Experience the world's finest perfumes in custom sizes</p>
+          <div className="max-w-xl mx-auto">
+            <input
+              type="search"
+              placeholder="Search fragrances..."
+              className="w-full px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <div className="container py-8">
+        <div className="flex gap-4 overflow-x-auto pb-4 mb-8">
+          {['all', 'niche', 'designer', 'vintage', 'natural'].map(category => (
+            <button
+              key={category}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all
+                ${selectedCategory === category 
+                  ? 'bg-primary text-white'
+                  : 'bg-surface text-text hover:bg-primary/10'}`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredPerfumes.map(perfume => (
+            <div key={perfume.id} className="card group">
+              {/* Product Image */}
+              <div className="relative aspect-square overflow-hidden bg-[#f5f5f7] rounded-t-lg">
+                <img
+                  src={perfume.image_url || 'https://via.placeholder.com/400x400'}
+                  alt={perfume.name}
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                />
+                <button className="absolute top-4 right-4 p-2 rounded-full bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Heart className="w-5 h-5 text-text hover:text-error transition-colors" />
+                </button>
+              </div>
+
+              {/* Product Info */}
+              <div className="p-6">
+                <h3 className="text-lg font-semibold mb-1">{perfume.name}</h3>
+                <p className="text-text-secondary mb-4">{perfume.brand}</p>
+                
+                {/* Size Selection */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {perfume.allowed_sizes.map(size => (
+                    <button
+                      key={size}
+                      onClick={() => addToCart(perfume, size)}
+                      className="px-4 py-2 rounded-full text-sm bg-surface border border-border hover:border-primary hover:text-primary transition-colors"
+                    >
+                      {size}ml - ${size * 15}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Available Volume */}
+                <div className="flex items-center text-sm text-text-secondary">
+                  <Droplet className="w-4 h-4 mr-1" />
+                  <span>{perfume.total_ml_available}ml available</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Notification */}
+      {notification && (
+        <div className={`
+          fixed bottom-8 right-8 p-4 rounded-lg shadow-lg backdrop-blur-md
+          flex items-center gap-2 text-white transition-all duration-300 fade-in
+          ${notification.type === 'success' ? 'bg-success/90' : 'bg-error/90'}
+        `}>
+          {notification.type === 'success' ? (
+            <Check className="w-5 h-5" />
+          ) : (
+            <X className="w-5 h-5" />
+          )}
+          <p>{notification.message}</p>
+        </div>
+      )}
+    </div>
+  );
 
   const removeFromCart = (index) => {
     const newCart = cart.filter((_, i) => i !== index);
