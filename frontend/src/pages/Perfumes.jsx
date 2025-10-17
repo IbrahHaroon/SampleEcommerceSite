@@ -1,6 +1,7 @@
 // src/pages/Perfumes.jsx
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Droplet, AlertCircle, Check, X } from 'lucide-react';
+import { getPerfumes, createPerfume, deletePerfume } from "../api";
 
 const API_BASE = 'http://localhost:8000';
 
@@ -233,9 +234,8 @@ export default function PerfumeDecantShop() {
     </div>
   );
 }
-import { getPerfumes, createPerfume, deletePerfume } from "../api";
 
-export default function Perfumes() {
+export function PerfumesAdmin() {
   const [perfumes, setPerfumes] = useState([]);
   const [form, setForm] = useState({ name: "", brand: "", total_ml_available: 0, allowed_sizes: [] });
 

@@ -1,11 +1,11 @@
 // src/App.jsx
-import Perfumes from "./pages/Perfumes";
+import PerfumeDecantShop from "./pages/Perfumes";
 
 function App() {
   return (
     <div style={{ padding: "2rem" }}>
-      <h1>Perfume Decant Shop</h1>
-      <Perfumes />
+  <h1>Perfume Decant Shop</h1>
+  <PerfumeDecantShop />
     </div>
   );
 }

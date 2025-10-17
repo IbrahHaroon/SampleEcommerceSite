@@ -5,6 +5,12 @@ __pycache__/
 *.pyo
 *.pyd
 
+# Common virtualenv names
+.venv/
+
+# Backend venv
+backend/.venv/
+
 # SQLite DB
 *.db
 

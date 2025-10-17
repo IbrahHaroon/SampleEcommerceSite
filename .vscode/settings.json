@@ -1,0 +1,10 @@
+{
+  // Use the backend venv Python for editor tools (isort, Pylance, linting)
+  "python.defaultInterpreterPath": "${workspaceFolder}\\backend\\.venv\\Scripts\\python.exe",
+  // Older versions of the extension use python.pythonPath; set it as a fallback
+  "python.pythonPath": "${workspaceFolder}\\backend\\.venv\\Scripts\\python.exe",
+  // Ensure isort uses the same interpreter
+  "isort.interpreter": ["${workspaceFolder}\\backend\\.venv\\Scripts\\python.exe"],
+  // Optional: point Pylance to the backend packages if needed
+  "python.analysis.extraPaths": ["${workspaceFolder}\\backend"]
+}
