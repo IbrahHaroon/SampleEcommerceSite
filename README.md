@@ -37,7 +37,7 @@ SampleEcommerceSite/
 
 ### Prerequisites
 - [Node.js & npm](https://nodejs.org/) (for frontend)
-- [Python 3.8+](https://www.python.org/) (for backend)
+- [Python 3.11+](https://www.python.org/) (for backend)
 
 ---
 
