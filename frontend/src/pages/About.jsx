@@ -1,47 +1,49 @@
-import React from 'react';
+import React from "react";
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
-      <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-xl shadow-md p-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
-            About Essence Decants
+    <div className="bg-black text-white">
+      <section className="mx-auto grid max-w-6xl gap-12 px-6 pb-24 pt-12 md:grid-cols-[minmax(0,1fr)_420px] md:pt-24">
+        <div className="space-y-8">
+          <p className="text-xs uppercase tracking-[0.4em] text-white/50">
+            About
+          </p>
+          <h1 className="text-4xl font-light leading-tight text-white md:text-5xl">
+            Built to highlight rare perfumes with clarity.
           </h1>
-          
-          <div className="space-y-6 text-gray-600">
-            <p>
-              Welcome to Essence Decants, your premier destination for authentic perfume decants. 
-              We believe everyone should have the opportunity to experience luxury fragrances 
-              without committing to a full bottle.
-            </p>
-            
-            <h2 className="text-xl font-semibold text-gray-800 mt-8">Our Story</h2>
-            <p>
-              Founded by fragrance enthusiasts, Essence Decants began with a simple mission: 
-              to make high-end perfumes more accessible through carefully measured decants. 
-              Our team's passion for perfumery drives us to provide the best possible service 
-              and authentic products to our customers.
-            </p>
-            
-            <h2 className="text-xl font-semibold text-gray-800 mt-8">Our Promise</h2>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>100% authentic fragrances sourced directly from authorized retailers</li>
-              <li>Precise measurements and professional decanting process</li>
-              <li>Secure packaging to ensure safe delivery</li>
-              <li>Outstanding customer service</li>
-              <li>Fair pricing and transparent policies</li>
-            </ul>
-            
-            <h2 className="text-xl font-semibold text-gray-800 mt-8">Quality Guarantee</h2>
-            <p>
-              Every decant is carefully prepared in a clean environment using professional 
-              tools. We stand behind the quality and authenticity of our products, and we're 
-              committed to ensuring your complete satisfaction with every purchase.
-            </p>
+          <p className="text-sm text-white/70">
+            We keep the interface pared down so the backend data can glow
+            through. Everything you see originates from craftsmen pouring small
+            batches in a real studio environment, verified by the FastAPI
+            service that powers inventory and checkout.
+          </p>
+          <p className="text-sm text-white/60">
+            Replace this copy with your story later. For now, treat it as
+            placeholder text that sets the tone: respectful, focused, and
+            monochrome.
+          </p>
+        </div>
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-t from-white/10 to-transparent p-6">
+          <div className="flex h-full flex-col justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-white/40">
+                Placeholder
+              </p>
+              <h2 className="mt-4 text-2xl font-light text-white">
+                About page imagery lives here.
+              </h2>
+            </div>
+            <div className="space-y-3 text-sm text-white/60">
+              <p>
+                We reserved this block for lifestyle photography or a team shot.
+              </p>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-white/50">
+                1200 x 1350
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

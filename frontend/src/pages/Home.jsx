@@ -1,92 +1,172 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingBag, Shield, Droplet } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getPerfumes } from "../api";
+import { resolvePerfumeImage } from "../utils/perfumeImages";
 
 export default function Home() {
+  const [popular, setPopular] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadPopular() {
+      try {
+        const data = await getPerfumes();
+        setPopular(data.slice(0, 4));
+      } catch (err) {
+        setError("We could not reach the atelier just yet.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPopular();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl font-semibold mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-              Essence Decants
+    <div className="bg-black text-white">
+      <section className="mx-auto grid max-w-6xl gap-12 px-6 pb-24 pt-12 md:grid-cols-[minmax(0,1fr)_420px] md:pt-24 lg:gap-20">
+        <div className="space-y-10">
+          <p className="text-xs uppercase tracking-[0.4em] text-white/50">
+            Scent Library
+          </p>
+          <div className="space-y-6">
+            <h1 className="text-4xl font-light leading-tight text-white md:text-5xl lg:text-6xl">
+              Minimal perfume wardrobes, curated in milliliters.
             </h1>
-            <p className="text-lg sm:text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-              Experience luxury fragrances through our curated collection of authentic decants. Discover your signature scent without committing to a full bottle.
+            <p className="max-w-xl text-base text-white/70 lg:text-lg">
+              Atelier Noir welcomes you to a darker, calmer browsing experience.
+              Scroll to explore a rotating list of popular perfumes, then step
+              into the full catalog to find the blend that speaks to you.
             </p>
+          </div>
+          <div className="flex flex-wrap gap-4">
             <Link
-              to="/products"
-              className="inline-flex items-center px-8 py-3 text-sm font-medium text-white bg-gray-900 rounded-full hover:bg-gray-800 transition-colors"
+              to="/perfumes"
+              className="rounded-full border border-white px-6 py-3 text-sm uppercase tracking-[0.3em]"
             >
-              <ShoppingBag className="w-4 h-4 mr-2" />
-              Browse Collection
+              View Catalog
+            </Link>
+            <Link
+              to="/faq"
+              className="rounded-full border border-white/20 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white/70 hover:text-white"
+            >
+              FAQ
             </Link>
           </div>
+          <p className="text-xs uppercase tracking-[0.4em] text-white/40">
+            Scroll Down For Popular Perfumes
+          </p>
         </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-6 flex items-center justify-center">
-                <Droplet className="w-6 h-6 text-gray-900" />
+        <div className="relative">
+          <div className="h-[420px] rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-transparent p-6">
+            <div className="flex h-full flex-col justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.5em] text-white/50">
+                  Placeholder
+                </p>
+                <h2 className="mt-4 text-2xl font-light text-white/90">
+                  Image reserved for hero artwork
+                </h2>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">
-                Authentic Perfumes
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Genuine fragrances sourced directly from authorized retailers.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-6 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-gray-900" />
+              <div className="space-y-3 text-sm text-white/60">
+                <p>
+                  Use this canvas for campaign imagery or photography. Keep the
+                  palette monochrome to stay on brand.
+                </p>
+                <span className="inline-flex w-fit tracking-[0.5em] text-[10px] text-white/50">
+                  1400 &times; 900
+                </span>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">
-                Secure Packaging
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Premium bottles and careful packaging ensure perfect preservation.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-6 flex items-center justify-center">
-                <ShoppingBag className="w-6 h-6 text-gray-900" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">
-                Custom Sizes
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Choose from various sizes to suit your preferences and needs.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-semibold text-gray-900 mb-4">
-            Ready to explore?
-          </h2>
-          <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-            Browse our collection of premium fragrances and find your perfect match.
-          </p>
-          <Link
-            to="/products"
-            className="inline-block px-8 py-3 text-sm font-medium text-gray-900 border border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-colors"
-          >
-            View All Fragrances
-          </Link>
+      <section className="border-t border-white/5 px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-white/50">
+                Popular right now
+              </p>
+              <h2 className="mt-4 text-3xl font-light text-white">
+                Clean silhouettes for every mood.
+              </h2>
+              <p className="mt-2 text-sm text-white/60">
+                Scroll to sample the most requested decants from our backend
+                catalog.
+              </p>
+            </div>
+            <Link
+              to="/perfumes"
+              className="text-xs uppercase tracking-[0.4em] text-white/70 hover:text-white"
+            >
+              View All
+            </Link>
+          </div>
+          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {loading && (
+              <>
+                {[...Array(3)].map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="animate-pulse rounded-2xl border border-white/10 p-6"
+                  >
+                    <div className="h-6 w-1/2 rounded bg-white/10" />
+                    <div className="mt-4 h-4 w-3/4 rounded bg-white/5" />
+                    <div className="mt-8 h-32 rounded-xl bg-white/5" />
+                  </div>
+                ))}
+              </>
+            )}
+            {!loading && error && (
+              <div className="rounded-2xl border border-white/10 p-6 text-sm text-white/70">
+                {error}
+              </div>
+            )}
+            {!loading &&
+              !error &&
+              popular.map((perfume) => {
+                const imageSrc = resolvePerfumeImage(perfume);
+                return (
+                  <article
+                    key={perfume.id}
+                    className="flex flex-col justify-between rounded-2xl border border-white/10 p-6"
+                  >
+                    <div>
+                      <div className="overflow-hidden rounded-xl border border-white/10">
+                        <img
+                          src={imageSrc}
+                          alt={`${perfume.name} bottle`}
+                          className="h-56 w-full object-cover object-center"
+                          loading="lazy"
+                        />
+                      </div>
+                      <p className="mt-6 text-[10px] uppercase tracking-[0.4em] text-white/50">
+                        {perfume.brand}
+                      </p>
+                      <h3 className="mt-4 text-2xl font-light text-white">
+                        {perfume.name}
+                      </h3>
+                      <p className="mt-3 text-sm text-white/60">
+                        Available sizes:{" "}
+                        {perfume.allowed_sizes
+                          ? perfume.allowed_sizes
+                              .map((size) => `${size} ml`)
+                              .join(" / ")
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <Link
+                      to="/perfumes"
+                      className="mt-10 text-xs uppercase tracking-[0.4em] text-white/60 hover:text-white"
+                    >
+                      Inspect
+                    </Link>
+                  </article>
+                );
+              })}
+          </div>
         </div>
       </section>
     </div>

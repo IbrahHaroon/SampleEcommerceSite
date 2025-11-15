@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navigation from './components/Navigation';
-import Home from './pages/Home';
-import PerfumeDecantShop from './pages/Perfumes';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navigation from "./components/Navigation";
+import Home from "./pages/Home";
+import Perfumes from "./pages/Perfumes";
+import FAQ from "./pages/FAQ";
+import About from "./pages/About";
 
 export default function App() {
-  const [cartCount, setCartCount] = useState(0);
-
   return (
     <Router>
-      <div className="App">
-        <Navigation cartItemCount={cartCount} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<PerfumeDecantShop />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
+      <div className="min-h-screen bg-black text-white">
+        <Navigation />
+        <main className="pt-24">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/perfumes" element={<Perfumes />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+        </main>
       </div>
     </Router>
   );

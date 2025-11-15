@@ -1,130 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Search } from 'lucide-react';
-import '../styles/globals.css';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 
-export default function Navigation({ cartItemCount = 0 }) {
+const NAV_LINKS = [
+  { path: "/", label: "Home" },
+  { path: "/perfumes", label: "Perfumes" },
+  { path: "/faq", label: "FAQ" },
+  { path: "/about", label: "About" },
+];
+
+export default function Navigation() {
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [open, setOpen] = useState(false);
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) =>
+    path === "/"
+      ? location.pathname === "/"
+      : location.pathname.startsWith(path);
 
-  const navLinkClass = (path) => `
-    px-4 py-2 text-sm font-medium tracking-wide transition-all duration-200
-    ${isActive(path)
-      ? 'text-primary'
-      : 'text-text hover:text-primary'}
-  `;
+  const linkClasses = (path) =>
+    `text-sm tracking-[0.2em] uppercase transition ${
+      isActive(path) ? "text-white" : "text-white/50 hover:text-white"
+    }`;
 
   return (
-    <nav className={`
-      fixed top-0 left-0 right-0 z-50
-      bg-[rgba(251,251,253,${isScrolled ? '0.9' : '0.8'})]
-      backdrop-blur-md transition-all duration-300
-      ${isScrolled ? 'shadow-sm' : ''}
-    `}>
-      <div className="h-12 flex items-center justify-center border-b border-[#d2d2d7]">
-        <div className="container flex items-center justify-between">
-          <Link 
-            to="/" 
-            className="text-lg font-semibold text-text hover:text-primary transition-colors"
-          >
-            Essence Decants
-          </Link>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center justify-center space-x-6">
-            <Link to="/" className={navLinkClass('/')}>
-              Home
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-5 md:py-6">
+        <Link
+          to="/"
+          className="text-xs uppercase tracking-[0.4em] text-white/60"
+        >
+          Atelier Noir
+        </Link>
+        <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">
+          {NAV_LINKS.map((link) => (
+            <Link key={link.path} to={link.path} className={linkClasses(link.path)}>
+              {link.label}
             </Link>
-            <Link to="/products" className={navLinkClass('/products')}>
-              Products
-            </Link>
-            <Link to="/about" className={navLinkClass('/about')}>
-              About
-            </Link>
-            <Link to="/contact" className={navLinkClass('/contact')}>
-              Contact
-            </Link>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <button className="p-2 text-text hover:text-primary transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
+          ))}
+        </nav>
+        <div className="hidden w-28 justify-end md:flex">
+          <span className="text-[10px] uppercase tracking-[0.5em] text-white/40">
+            Est. 2025
+          </span>
+        </div>
+        <button
+          className="ml-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white md:hidden"
+          onClick={() => setOpen((prev) => !prev)}
+          aria-label="Toggle navigation"
+        >
+          {open ? <X size={18} /> : <Menu size={18} />}
+        </button>
+      </div>
+      {open && (
+        <div className="flex flex-col border-t border-white/10 bg-black/95 px-6 py-4 md:hidden">
+          {NAV_LINKS.map((link) => (
             <Link
-              to="/cart"
-              className="relative p-2 text-text hover:text-primary transition-colors"
+              key={link.path}
+              to={link.path}
+              className={`py-3 text-sm uppercase tracking-[0.2em] ${
+                isActive(link.path) ? "text-white" : "text-white/60"
+              }`}
+              onClick={() => setOpen(false)}
             >
-              <ShoppingCart className="w-5 h-5" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] font-medium rounded-full w-4 h-4 flex items-center justify-center">
-                  {cartItemCount}
-                </span>
-              )}
+              {link.label}
             </Link>
-          </div>
+          ))}
         </div>
-      </div>
-
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden fixed right-4 top-2 p-2 text-[#1d1d1f] hover:opacity-70 transition-opacity"
-      >
-        {isMobileMenuOpen ? (
-          <X className="w-5 h-5" />
-        ) : (
-          <Menu className="w-5 h-5" />
-        )}
-      </button>
-
-      {/* Mobile menu */}
-      <div 
-        className={`md:hidden absolute w-full bg-[rgba(251,251,253,0.95)] transition-all duration-300 border-b border-[#d2d2d7]
-          ${isMobileMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}
-      >
-        <div className="px-8 py-2 space-y-1">
-          <Link
-            to="/"
-            className="block py-2 text-sm text-[#1d1d1f] hover:opacity-70 transition-opacity"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Home
-          </Link>
-          <Link
-            to="/products"
-            className="block py-2 text-sm text-[#1d1d1f] hover:opacity-70 transition-opacity"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Products
-          </Link>
-          <Link
-            to="/about"
-            className="block py-2 text-sm text-[#1d1d1f] hover:opacity-70 transition-opacity"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            About
-          </Link>
-          <Link
-            to="/contact"
-            className="block py-2 text-sm text-[#1d1d1f] hover:opacity-70 transition-opacity"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Contact
-          </Link>
-        </div>
-      </div>
-    </nav>
+      )}
+    </header>
   );
 }

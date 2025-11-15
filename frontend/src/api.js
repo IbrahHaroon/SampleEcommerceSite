@@ -1,5 +1,6 @@
 // src/api.js
-const API_URL = import.meta.env.VITE_API_URL;
+const DEFAULT_API_URL = "http://localhost:8000";
+const API_URL = (import.meta.env.VITE_API_URL || DEFAULT_API_URL).replace(/\/$/, "");
 
 export async function getPerfumes() {
   const res = await fetch(`${API_URL}/api/perfumes/`);
