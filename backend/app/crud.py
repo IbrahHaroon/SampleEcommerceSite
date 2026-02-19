@@ -11,7 +11,6 @@ from app import models, schemas
 # ---------------------------
 
 def list_perfumes(db: Session) -> List[models.Perfume]:
-    """Return all perfumes ordered by brand then name."""
     return (
         db.query(models.Perfume)
         .order_by(models.Perfume.brand, models.Perfume.name)
@@ -20,21 +19,11 @@ def list_perfumes(db: Session) -> List[models.Perfume]:
 
 
 def get_perfume(db: Session, perfume_id: int) -> Optional[models.Perfume]:
-    """Return a single perfume by id, or None if not found."""
     return db.query(models.Perfume).filter(models.Perfume.id == perfume_id).first()
 
 
 def create_perfume(db: Session, data: schemas.PerfumeCreate) -> models.Perfume:
-    """
-    Create a new perfume from a PerfumeCreate payload.
-    Assumes validation already handled by Pydantic (non-empty allowed_sizes, etc).
-    """
-    perfume = models.Perfume(
-        name=data.name,
-        brand=data.brand,
-        total_ml_available=data.total_ml_available,
-        allowed_sizes=data.allowed_sizes,
-    )
+    perfume = models.Perfume(**data.model_dump())
     db.add(perfume)
     db.commit()
     db.refresh(perfume)
@@ -46,30 +35,17 @@ def update_perfume(
     perfume_id: int,
     data: schemas.PerfumeUpdate,
 ) -> Optional[models.Perfume]:
-    """
-    Partially update a perfume. Fields set to None are ignored.
-    Returns the updated perfume or None if not found.
-    """
     perfume = get_perfume(db, perfume_id)
     if not perfume:
         return None
-
-    if data.name is not None:
-        perfume.name = data.name
-    if data.brand is not None:
-        perfume.brand = data.brand
-    if data.total_ml_available is not None:
-        perfume.total_ml_available = data.total_ml_available
-    if data.allowed_sizes is not None:
-        perfume.allowed_sizes = data.allowed_sizes
-
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(perfume, field, value)
     db.commit()
     db.refresh(perfume)
     return perfume
 
 
 def delete_perfume(db: Session, perfume_id: int) -> bool:
-    """Delete a perfume by id. Returns True if deleted, False if not found."""
     perfume = get_perfume(db, perfume_id)
     if not perfume:
         return False
@@ -79,7 +55,7 @@ def delete_perfume(db: Session, perfume_id: int) -> bool:
 
 
 # ---------------------------
-# Business operation
+# Business operations
 # ---------------------------
 
 def purchase_decant(
@@ -88,31 +64,76 @@ def purchase_decant(
     size_ml: float,
     quantity: int = 1,
 ) -> Union[models.Perfume, str, None]:
-    """
-    Decrement stock by (size_ml * quantity) if:
-      - perfume exists
-      - size_ml is allowed for that perfume
-      - enough total_ml_available remains
-
-    Returns:
-      - updated models.Perfume on success
-      - "Invalid size" if size_ml not allowed
-      - "Not enough stock" if insufficient ml
-      - None if perfume not found
-    """
     perfume = get_perfume(db, perfume_id)
     if not perfume:
         return None
-
     if size_ml not in perfume.allowed_sizes:
         return "Invalid size"
-
     needed_ml = size_ml * quantity
     if perfume.total_ml_available < needed_ml:
         return "Not enough stock"
-
     perfume.total_ml_available -= needed_ml
     db.commit()
     db.refresh(perfume)
     return perfume
 
+
+def create_order(
+    db: Session,
+    perfume_id: int,
+    size_ml: float,
+    quantity: int,
+    amount_total: int,
+    currency: str,
+    stripe_session_id: str,
+    user_id: Optional[str] = None,
+) -> models.Order:
+    order = models.Order(
+        perfume_id=perfume_id,
+        user_id=user_id,
+        size_ml=size_ml,
+        quantity=quantity,
+        amount_total=amount_total,
+        currency=currency,
+        stripe_session_id=stripe_session_id,
+        status="pending",
+    )
+    db.add(order)
+    db.commit()
+    db.refresh(order)
+    return order
+
+
+def mark_order_paid_and_decrement_stock(
+    db: Session,
+    stripe_session_id: str,
+) -> Optional[models.Order]:
+    order = (
+        db.query(models.Order)
+        .filter(models.Order.stripe_session_id == stripe_session_id)
+        .first()
+    )
+    if not order:
+        return None
+
+    # Idempotency guard — already processed
+    if order.status != "pending":
+        return order
+
+    perfume = get_perfume(db, order.perfume_id)
+    if not perfume:
+        order.status = "failed_stock"
+        db.commit()
+        return order
+
+    needed_ml = order.size_ml * order.quantity
+    if perfume.total_ml_available < needed_ml:
+        order.status = "failed_stock"
+        db.commit()
+        return order
+
+    perfume.total_ml_available -= needed_ml
+    order.status = "paid"
+    db.commit()
+    db.refresh(order)
+    return order

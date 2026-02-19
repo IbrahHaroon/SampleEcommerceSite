@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Request, Header, HTTPException, Depends
 from sqlalchemy.orm import Session
 import os, stripe
@@ -9,7 +10,7 @@ router = APIRouter()
 @router.post("/stripe")
 async def stripe_webhook(
     request: Request,
-    stripe_signature: str | None = Header(default=None, alias="Stripe-Signature"),
+    stripe_signature: Optional[str] = Header(default=None, alias="Stripe-Signature"),
     db: Session = Depends(get_db),
 ):
     if not stripe_signature:
@@ -22,7 +23,7 @@ async def stripe_webhook(
 
     try:
         event = stripe.Webhook.construct_event(payload, stripe_signature, endpoint_secret)
-    except stripe.error.SignatureVerificationError:
+    except stripe.SignatureVerificationError:
         raise HTTPException(status_code=400, detail="Invalid signature")
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid payload")

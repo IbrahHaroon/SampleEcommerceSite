@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getPerfumes } from "../api";
 import { resolvePerfumeImage } from "../utils/perfumeImages";
 
@@ -13,7 +14,7 @@ export default function Perfumes() {
       try {
         const data = await getPerfumes();
         setPerfumes(data);
-      } catch (err) {
+      } catch {
         setError("Unable to reach the perfume catalog right now.");
       } finally {
         setLoading(false);
@@ -39,10 +40,11 @@ export default function Perfumes() {
               Every perfume, side by side.
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-white/60">
-              This grid pours directly from the FastAPI backend, so your scroll
-              reflects live inventory. Take your time and explore.
+              This grid pours directly from the backend — your scroll reflects live
+              inventory. Click any card to explore and purchase.
             </p>
           </div>
+
           <div className="flex w-full flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="w-full max-w-sm">
               <label
@@ -55,13 +57,13 @@ export default function Perfumes() {
                 id="perfume-search"
                 type="text"
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Type a name or brand"
-                className="mt-2 w-full rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white"
+                className="mt-2 w-full rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white focus:outline-none"
               />
             </div>
             <p className="text-xs uppercase tracking-[0.4em] text-white/40">
-              Scroll to view products below
+              {filtered.length} {filtered.length === 1 ? "result" : "results"}
             </p>
           </div>
         </div>
@@ -89,42 +91,51 @@ export default function Perfumes() {
             !error &&
             filtered.map((perfume) => {
               const imageSrc = resolvePerfumeImage(perfume);
+              const pricePerMl = perfume.price_per_ml_cents ?? 700;
+              const minSize = perfume.allowed_sizes?.[0];
+              const fromPrice = minSize
+                ? `From $${((minSize * pricePerMl) / 100).toFixed(2)}`
+                : null;
+
               return (
-                <article
+                <Link
                   key={perfume.id}
-                  className="flex flex-col rounded-3xl border border-white/10 p-6"
+                  to={`/perfumes/${perfume.id}`}
+                  className="group flex flex-col rounded-3xl border border-white/10 p-6 transition hover:border-white/30"
                 >
                   <div className="overflow-hidden rounded-2xl border border-white/10">
                     <img
                       src={imageSrc}
                       alt={`${perfume.name} bottle`}
-                      className="h-60 w-full object-cover object-center"
+                      className="h-60 w-full object-cover object-center transition duration-500 group-hover:scale-105"
                       loading="lazy"
                     />
                   </div>
-                  <div className="mt-6 space-y-3">
+                  <div className="mt-6 space-y-2 flex-1">
                     <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">
                       {perfume.brand}
                     </p>
-                    <h2 className="text-2xl font-light text-white">
-                      {perfume.name}
-                    </h2>
-                    <p className="text-sm text-white/60">
-                      Available sizes:{" "}
+                    <h2 className="text-2xl font-light text-white">{perfume.name}</h2>
+                    {perfume.concentration && (
+                      <p className="text-[10px] uppercase tracking-[0.3em] text-white/30">
+                        {perfume.concentration}
+                      </p>
+                    )}
+                    <p className="text-sm text-white/50">
                       {perfume.allowed_sizes
-                        ? perfume.allowed_sizes
-                            .map((size) => `${size} ml`)
-                            .join(" / ")
+                        ? perfume.allowed_sizes.map((s) => `${s} ml`).join(" / ")
                         : "N/A"}
                     </p>
-                    <p className="text-sm text-white/50">
-                      Total remaining: {perfume.total_ml_available} ml
-                    </p>
                   </div>
-                  <div className="mt-auto pt-6 text-xs uppercase tracking-[0.4em] text-white/50">
-                    Backend Linked
+                  <div className="mt-6 flex items-center justify-between">
+                    {fromPrice && (
+                      <span className="text-sm text-white/60">{fromPrice}</span>
+                    )}
+                    <span className="ml-auto text-xs uppercase tracking-[0.4em] text-white/40 group-hover:text-white transition">
+                      View →
+                    </span>
                   </div>
-                </article>
+                </Link>
               );
             })}
         </div>

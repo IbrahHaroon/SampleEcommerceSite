@@ -129,16 +129,17 @@ export default function Home() {
               popular.map((perfume) => {
                 const imageSrc = resolvePerfumeImage(perfume);
                 return (
-                  <article
+                  <Link
                     key={perfume.id}
-                    className="flex flex-col justify-between rounded-2xl border border-white/10 p-6"
+                    to={`/perfumes/${perfume.id}`}
+                    className="group flex flex-col justify-between rounded-2xl border border-white/10 p-6 transition hover:border-white/30"
                   >
                     <div>
                       <div className="overflow-hidden rounded-xl border border-white/10">
                         <img
                           src={imageSrc}
                           alt={`${perfume.name} bottle`}
-                          className="h-56 w-full object-cover object-center"
+                          className="h-56 w-full object-cover object-center transition duration-500 group-hover:scale-105"
                           loading="lazy"
                         />
                       </div>
@@ -149,21 +150,15 @@ export default function Home() {
                         {perfume.name}
                       </h3>
                       <p className="mt-3 text-sm text-white/60">
-                        Available sizes:{" "}
                         {perfume.allowed_sizes
-                          ? perfume.allowed_sizes
-                              .map((size) => `${size} ml`)
-                              .join(" / ")
+                          ? perfume.allowed_sizes.map((s) => `${s} ml`).join(" / ")
                           : "N/A"}
                       </p>
                     </div>
-                    <Link
-                      to="/perfumes"
-                      className="mt-10 text-xs uppercase tracking-[0.4em] text-white/60 hover:text-white"
-                    >
-                      Inspect
-                    </Link>
-                  </article>
+                    <span className="mt-10 text-xs uppercase tracking-[0.4em] text-white/50 group-hover:text-white transition">
+                      Inspect →
+                    </span>
+                  </Link>
                 );
               })}
           </div>
