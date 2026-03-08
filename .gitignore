@@ -10,6 +10,7 @@ __pycache__/
 
 # Backend venv
 backend/.venv/
+backend/venv/
 
 # SQLite DB
 *.db
@@ -17,6 +18,10 @@ backend/.venv/
 # Node
 frontend/node_modules/
 frontend/dist/
+
+# Env files
+.env
+**/.env
 
 # Misc
 .DS_Store
