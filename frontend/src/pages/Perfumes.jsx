@@ -29,27 +29,18 @@ export default function Perfumes() {
   });
 
   return (
-    <div className="bg-black text-white">
+    <div className="text-gray-200">
       <section className="mx-auto max-w-6xl px-6 pb-24 pt-12 md:pt-24">
         <div className="space-y-8">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-white/50">
-              Full Collection
-            </p>
-            <h1 className="mt-4 text-4xl font-light leading-tight text-white md:text-5xl">
-              Every perfume, side by side.
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm text-white/60">
-              This grid pours directly from the backend — your scroll reflects live
-              inventory. Click any card to explore and purchase.
-            </p>
-          </div>
+          <h1 className="text-4xl font-light leading-tight text-gray-100 md:text-5xl">
+            Perfumes
+          </h1>
 
           <div className="flex w-full flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="w-full max-w-sm">
               <label
                 htmlFor="perfume-search"
-                className="text-[10px] uppercase tracking-[0.4em] text-white/50"
+                className="text-[10px] uppercase tracking-[0.4em] text-gray-400"
               >
                 Search
               </label>
@@ -59,10 +50,10 @@ export default function Perfumes() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Type a name or brand"
-                className="mt-2 w-full rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white focus:outline-none"
+                className="mt-2 w-full rounded-full border border-gray-400/30 bg-transparent px-4 py-3 text-sm text-gray-200 placeholder:text-gray-500 focus:border-gray-300 focus:outline-none"
               />
             </div>
-            <p className="text-xs uppercase tracking-[0.4em] text-white/40">
+            <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
               {filtered.length} {filtered.length === 1 ? "result" : "results"}
             </p>
           </div>
@@ -73,16 +64,16 @@ export default function Perfumes() {
             [...Array(6)].map((_, idx) => (
               <div
                 key={idx}
-                className="animate-pulse rounded-3xl border border-white/10 p-6"
+                className="animate-pulse rounded-3xl border border-gray-400/20 p-6"
               >
-                <div className="h-48 rounded-2xl bg-white/5" />
-                <div className="mt-6 h-6 w-3/4 rounded bg-white/10" />
-                <div className="mt-3 h-4 w-1/2 rounded bg-white/5" />
+                <div className="h-48 rounded-2xl bg-gray-400/10" />
+                <div className="mt-6 h-6 w-3/4 rounded bg-gray-400/20" />
+                <div className="mt-3 h-4 w-1/2 rounded bg-gray-400/10" />
               </div>
             ))}
 
           {!loading && error && (
-            <div className="rounded-3xl border border-white/10 p-6 text-sm text-white/70">
+            <div className="rounded-3xl border border-gray-400/20 p-6 text-sm text-gray-400">
               {error}
             </div>
           )}
@@ -101,9 +92,9 @@ export default function Perfumes() {
                 <Link
                   key={perfume.id}
                   to={`/perfumes/${perfume.id}`}
-                  className="group flex flex-col rounded-3xl border border-white/10 p-6 transition hover:border-white/30"
+                  className="group flex flex-col rounded-3xl border border-gray-400/20 p-6 transition hover:border-gray-400/50"
                 >
-                  <div className="overflow-hidden rounded-2xl border border-white/10">
+                  <div className="overflow-hidden rounded-2xl border border-gray-400/20">
                     <img
                       src={imageSrc}
                       alt={`${perfume.name} bottle`}
@@ -112,16 +103,16 @@ export default function Perfumes() {
                     />
                   </div>
                   <div className="mt-6 space-y-2 flex-1">
-                    <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">
+                    <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">
                       {perfume.brand}
                     </p>
-                    <h2 className="text-2xl font-light text-white">{perfume.name}</h2>
+                    <h2 className="text-2xl font-light text-gray-100">{perfume.name}</h2>
                     {perfume.concentration && (
-                      <p className="text-[10px] uppercase tracking-[0.3em] text-white/30">
+                      <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500">
                         {perfume.concentration}
                       </p>
                     )}
-                    <p className="text-sm text-white/50">
+                    <p className="text-sm text-gray-400">
                       {perfume.allowed_sizes
                         ? perfume.allowed_sizes.map((s) => `${s} ml`).join(" / ")
                         : "N/A"}
@@ -129,9 +120,9 @@ export default function Perfumes() {
                   </div>
                   <div className="mt-6 flex items-center justify-between">
                     {fromPrice && (
-                      <span className="text-sm text-white/60">{fromPrice}</span>
+                      <span className="text-sm text-gray-400">{fromPrice}</span>
                     )}
-                    <span className="ml-auto text-xs uppercase tracking-[0.4em] text-white/40 group-hover:text-white transition">
+                    <span className="ml-auto text-xs uppercase tracking-[0.4em] text-gray-400 group-hover:text-gray-200 transition">
                       View →
                     </span>
                   </div>
@@ -141,7 +132,7 @@ export default function Perfumes() {
         </div>
 
         {!loading && !error && filtered.length === 0 && (
-          <p className="mt-12 text-sm text-white/50">
+          <p className="mt-12 text-sm text-gray-400">
             Nothing matched that search. Clear the filter to see everything.
           </p>
         )}

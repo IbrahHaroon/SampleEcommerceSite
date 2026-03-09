@@ -108,9 +108,11 @@ def mark_order_paid_and_decrement_stock(
     db: Session,
     stripe_session_id: str,
 ) -> Optional[models.Order]:
+    # Lock the order row to prevent concurrent webhook processing for the same session
     order = (
         db.query(models.Order)
         .filter(models.Order.stripe_session_id == stripe_session_id)
+        .with_for_update()
         .first()
     )
     if not order:
@@ -120,7 +122,13 @@ def mark_order_paid_and_decrement_stock(
     if order.status != "pending":
         return order
 
-    perfume = get_perfume(db, order.perfume_id)
+    # Lock the perfume row to prevent overselling across concurrent orders
+    perfume = (
+        db.query(models.Perfume)
+        .filter(models.Perfume.id == order.perfume_id)
+        .with_for_update()
+        .first()
+    )
     if not perfume:
         order.status = "failed_stock"
         db.commit()

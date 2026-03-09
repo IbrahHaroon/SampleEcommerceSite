@@ -6,6 +6,8 @@ export default {
       colors: {
         charcoal: "#030303",
         accent: "#f5f5f5",
+        gradientTop: "#3d3d3d",
+        gradientBottom: "#939393",
       },
       fontFamily: {
         sans: ['"Space Grotesk"', "Inter", "system-ui", "sans-serif"],

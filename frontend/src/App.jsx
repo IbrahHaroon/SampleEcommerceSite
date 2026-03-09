@@ -15,7 +15,7 @@ export default function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="min-h-screen bg-black text-white">
+        <div className="min-h-screen text-gray-200 border-x border-blue-500/40 max-w-screen-2xl mx-auto shadow-[0_0_40px_rgba(59,130,246,0.15)]">
           <Navigation />
           <main className="pt-24">
             <Routes>

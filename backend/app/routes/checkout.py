@@ -26,6 +26,11 @@ def create_checkout_session(
     if perfume.total_ml_available < needed_ml:
         raise HTTPException(status_code=400, detail="Not enough stock")
 
+    # Calculate price server-side — never trust client-supplied amounts
+    unit_amount_cents = round(perfume.price_per_ml_cents * payload.size_ml)
+    if unit_amount_cents <= 0:
+        raise HTTPException(status_code=400, detail="Invalid price configuration")
+
     FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
     session = stripe.checkout.Session.create(
@@ -38,7 +43,7 @@ def create_checkout_session(
                 "product_data": {
                     "name": f"{perfume.brand} {perfume.name} — {payload.size_ml}ml decant",
                 },
-                "unit_amount": payload.unit_amount_cents,
+                "unit_amount": unit_amount_cents,
             },
             "quantity": payload.quantity,
         }],
@@ -57,7 +62,7 @@ def create_checkout_session(
         perfume_id=perfume.id,
         size_ml=payload.size_ml,
         quantity=payload.quantity,
-        amount_total=payload.unit_amount_cents * payload.quantity,
+        amount_total=unit_amount_cents * payload.quantity,
         currency="usd",
         stripe_session_id=session.id,
         user_id=user_id,

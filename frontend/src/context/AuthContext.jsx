@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+    }).catch(() => {}).finally(() => {
       setLoading(false);
     });
 

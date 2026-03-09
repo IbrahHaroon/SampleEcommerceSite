@@ -43,9 +43,8 @@ class PerfumeUpdate(BaseModel):
 
 class CheckoutRequest(BaseModel):
     perfume_id: int
-    size_ml: float
-    quantity: int = Field(default=1, ge=1)
-    unit_amount_cents: int = Field(ge=0)
+    size_ml: float = Field(gt=0, le=1000)
+    quantity: int = Field(default=1, ge=1, le=10)
 
 
 class OrderOut(BaseModel):

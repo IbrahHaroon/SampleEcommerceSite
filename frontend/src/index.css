@@ -7,15 +7,16 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  background-color: #000;
-  color: #fff;
+  background: linear-gradient(to bottom, #3d3d3d, #939393);
+  color: #e5e5e5;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #000;
-  color: #fff;
+  background: linear-gradient(to bottom, #3d3d3d, #939393);
+  background-attachment: fixed;
+  color: #e5e5e5;
 }
 
 #root {

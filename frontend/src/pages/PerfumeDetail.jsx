@@ -43,9 +43,8 @@ export default function PerfumeDetail() {
     setCheckoutLoading(true);
     setCheckoutError(null);
     try {
-      const unitAmountCents = Math.round(selectedSize * perfume.price_per_ml_cents);
       const { url } = await createCheckoutSession(
-        { perfume_id: perfume.id, size_ml: selectedSize, quantity, unit_amount_cents: unitAmountCents },
+        { perfume_id: perfume.id, size_ml: selectedSize, quantity },
         session
       );
       window.location.href = url;
@@ -57,8 +56,8 @@ export default function PerfumeDetail() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center bg-black">
-        <Loader className="animate-spin text-white/30" size={32} />
+      <div className="flex min-h-[70vh] items-center justify-center">
+        <Loader className="animate-spin text-gray-400" size={32} />
       </div>
     );
   }
@@ -66,10 +65,10 @@ export default function PerfumeDetail() {
   if (error || !perfume) {
     return (
       <div className="mx-auto max-w-6xl px-6 py-24 text-center">
-        <p className="text-white/60">{error ?? "Perfume not found."}</p>
+        <p className="text-gray-400">{error ?? "Perfume not found."}</p>
         <Link
           to="/perfumes"
-          className="mt-6 inline-block text-xs uppercase tracking-[0.4em] text-white hover:text-white/60 transition"
+          className="mt-6 inline-block text-xs uppercase tracking-[0.4em] text-gray-200 hover:text-gray-400 transition"
         >
           ← Back to Catalog
         </Link>
@@ -82,12 +81,12 @@ export default function PerfumeDetail() {
   const totalCents = unitCents * quantity;
 
   return (
-    <div className="bg-black text-white">
+    <div className="text-gray-200">
       <div className="mx-auto max-w-6xl px-6 pb-24 pt-12 md:pt-24">
         {/* Back */}
         <button
           onClick={() => navigate(-1)}
-          className="mb-12 flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-white/50 hover:text-white transition"
+          className="mb-12 flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-gray-400 hover:text-gray-200 transition"
         >
           <ArrowLeft size={14} />
           Back
@@ -95,7 +94,7 @@ export default function PerfumeDetail() {
 
         <div className="grid gap-12 md:grid-cols-2 lg:gap-20">
           {/* Image */}
-          <div className="overflow-hidden rounded-3xl border border-white/10">
+          <div className="overflow-hidden rounded-3xl border border-gray-400/20">
             <img
               src={imageSrc}
               alt={`${perfume.name} by ${perfume.brand}`}
@@ -107,38 +106,38 @@ export default function PerfumeDetail() {
           <div className="flex flex-col space-y-8">
             {/* Title block */}
             <div>
-              <p className="text-[10px] uppercase tracking-[0.5em] text-white/50">
+              <p className="text-[10px] uppercase tracking-[0.5em] text-gray-400">
                 {perfume.brand}
               </p>
               {perfume.concentration && (
-                <p className="mt-1 text-[10px] uppercase tracking-[0.4em] text-white/30">
+                <p className="mt-1 text-[10px] uppercase tracking-[0.4em] text-gray-500">
                   {perfume.concentration}
                 </p>
               )}
-              <h1 className="mt-4 text-4xl font-light leading-tight text-white">
+              <h1 className="mt-4 text-4xl font-light leading-tight text-gray-100">
                 {perfume.name}
               </h1>
             </div>
 
             {/* Description */}
             {perfume.description && (
-              <p className="text-sm leading-relaxed text-white/70">{perfume.description}</p>
+              <p className="text-sm leading-relaxed text-gray-400">{perfume.description}</p>
             )}
 
             {/* Notes */}
             {perfume.notes && (
               <div>
-                <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">
+                <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">
                   Fragrance Notes
                 </p>
-                <p className="mt-2 text-sm text-white/70">{perfume.notes}</p>
+                <p className="mt-2 text-sm text-gray-400">{perfume.notes}</p>
               </div>
             )}
 
             {/* Stock */}
             <div>
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">Availability</p>
-              <p className="mt-2 text-sm text-white/60">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">Availability</p>
+              <p className="mt-2 text-sm text-gray-400">
                 {perfume.total_ml_available > 0
                   ? `${perfume.total_ml_available} ml remaining`
                   : "Out of stock"}
@@ -147,7 +146,7 @@ export default function PerfumeDetail() {
 
             {/* Size selector */}
             <div>
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">Select Size</p>
+              <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">Select Size</p>
               <div className="mt-3 flex flex-wrap gap-3">
                 {perfume.allowed_sizes.map((size) => {
                   const price = formatPrice(Math.round(size * perfume.price_per_ml_cents));
@@ -157,8 +156,8 @@ export default function PerfumeDetail() {
                       onClick={() => setSelectedSize(size)}
                       className={`rounded-full border px-5 py-2 text-sm transition ${
                         selectedSize === size
-                          ? "border-white bg-white text-black"
-                          : "border-white/20 text-white/60 hover:border-white hover:text-white"
+                          ? "border-gray-200 bg-gray-200 text-gray-900"
+                          : "border-gray-400/30 text-gray-400 hover:border-gray-300 hover:text-gray-200"
                       }`}
                     >
                       {size} ml — {price}
@@ -170,18 +169,18 @@ export default function PerfumeDetail() {
 
             {/* Quantity */}
             <div>
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">Quantity</p>
+              <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">Quantity</p>
               <div className="mt-3 flex items-center gap-4">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white hover:border-white transition"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-400/30 text-gray-200 hover:border-gray-300 transition"
                 >
                   −
                 </button>
                 <span className="w-6 text-center text-lg">{quantity}</span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white hover:border-white transition"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-400/30 text-gray-200 hover:border-gray-300 transition"
                 >
                   +
                 </button>
@@ -189,9 +188,9 @@ export default function PerfumeDetail() {
             </div>
 
             {/* Total + buy */}
-            <div className="border-t border-white/10 pt-8">
+            <div className="border-t border-gray-400/20 pt-8">
               {selectedSize && (
-                <p className="mb-5 text-2xl font-light text-white">
+                <p className="mb-5 text-2xl font-light text-gray-100">
                   {formatPrice(totalCents)}
                 </p>
               )}
@@ -204,7 +203,7 @@ export default function PerfumeDetail() {
                 <button
                   onClick={handleCheckout}
                   disabled={checkoutLoading || !selectedSize}
-                  className="flex w-full items-center justify-center gap-3 rounded-full border border-white bg-white py-4 text-sm uppercase tracking-[0.3em] text-black transition hover:bg-white/90 disabled:opacity-40"
+                  className="flex w-full items-center justify-center gap-3 rounded-full border border-gray-300 bg-gray-200 py-4 text-sm uppercase tracking-[0.3em] text-gray-900 transition hover:bg-gray-100 disabled:opacity-40"
                 >
                   {checkoutLoading ? (
                     <Loader className="animate-spin" size={16} />
@@ -214,7 +213,7 @@ export default function PerfumeDetail() {
                   {checkoutLoading ? "Redirecting…" : "Purchase"}
                 </button>
               ) : (
-                <p className="text-center text-sm uppercase tracking-[0.3em] text-white/30">
+                <p className="text-center text-sm uppercase tracking-[0.3em] text-gray-500">
                   Out of Stock
                 </p>
               )}

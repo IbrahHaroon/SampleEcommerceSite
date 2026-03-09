@@ -49,20 +49,20 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center bg-black px-6">
+    <div className="flex min-h-[80vh] items-center justify-center px-6 text-gray-200">
       <div className="w-full max-w-sm">
         <div className="mb-10 text-center">
-          <p className="text-[10px] uppercase tracking-[0.5em] text-white/40">
+          <p className="text-[10px] uppercase tracking-[0.5em] text-gray-400">
             {mode === "login" ? "Sign In" : "Create Account"}
           </p>
-          <h1 className="mt-4 text-3xl font-light text-white">
-            {mode === "login" ? "Welcome back." : "Join Atelier Noir."}
+          <h1 className="mt-4 text-3xl font-light text-gray-100">
+            {mode === "login" ? "Welcome back." : "Join Ibrahim's Samples."}
           </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-[10px] uppercase tracking-[0.4em] text-white/40">
+            <label className="text-[10px] uppercase tracking-[0.4em] text-gray-400">
               Email
             </label>
             <input
@@ -71,12 +71,12 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="mt-2 w-full rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white focus:outline-none"
+              className="mt-2 w-full rounded-full border border-gray-400/30 bg-transparent px-4 py-3 text-sm text-gray-200 placeholder:text-gray-500 focus:border-gray-300 focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="text-[10px] uppercase tracking-[0.4em] text-white/40">
+            <label className="text-[10px] uppercase tracking-[0.4em] text-gray-400">
               Password
             </label>
             <input
@@ -85,7 +85,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="mt-2 w-full rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white focus:outline-none"
+              className="mt-2 w-full rounded-full border border-gray-400/30 bg-transparent px-4 py-3 text-sm text-gray-200 placeholder:text-gray-500 focus:border-gray-300 focus:outline-none"
             />
           </div>
 
@@ -95,7 +95,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-white bg-white py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:bg-white/90 disabled:opacity-40"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-gray-200 py-3 text-sm uppercase tracking-[0.3em] text-gray-900 transition hover:bg-gray-100 disabled:opacity-40"
           >
             {loading && <Loader className="animate-spin" size={14} />}
             {mode === "login" ? "Sign In" : "Create Account"}
@@ -105,7 +105,7 @@ export default function Login() {
         <div className="mt-8 text-center">
           <button
             onClick={toggleMode}
-            className="text-xs uppercase tracking-[0.4em] text-white/40 hover:text-white transition"
+            className="text-xs uppercase tracking-[0.4em] text-gray-400 hover:text-gray-200 transition"
           >
             {mode === "login" ? "No account? Sign up" : "Have an account? Sign in"}
           </button>

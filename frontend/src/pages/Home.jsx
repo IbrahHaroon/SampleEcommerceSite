@@ -14,7 +14,7 @@ export default function Home() {
         const data = await getPerfumes();
         setPopular(data.slice(0, 4));
       } catch (err) {
-        setError("We could not reach the atelier just yet.");
+        setError("Could not load perfumes.");
       } finally {
         setLoading(false);
       }
@@ -23,104 +23,58 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-black text-white">
-      <section className="mx-auto grid max-w-6xl gap-12 px-6 pb-24 pt-12 md:grid-cols-[minmax(0,1fr)_420px] md:pt-24 lg:gap-20">
-        <div className="space-y-10">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/50">
-            Scent Library
-          </p>
-          <div className="space-y-6">
-            <h1 className="text-4xl font-light leading-tight text-white md:text-5xl lg:text-6xl">
-              Minimal perfume wardrobes, curated in milliliters.
-            </h1>
-            <p className="max-w-xl text-base text-white/70 lg:text-lg">
-              Atelier Noir welcomes you to a darker, calmer browsing experience.
-              Scroll to explore a rotating list of popular perfumes, then step
-              into the full catalog to find the blend that speaks to you.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-4">
-            <Link
-              to="/perfumes"
-              className="rounded-full border border-white px-6 py-3 text-sm uppercase tracking-[0.3em]"
-            >
-              View Catalog
-            </Link>
-            <Link
-              to="/faq"
-              className="rounded-full border border-white/20 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white/70 hover:text-white"
-            >
-              FAQ
-            </Link>
-          </div>
-          <p className="text-xs uppercase tracking-[0.4em] text-white/40">
-            Scroll Down For Popular Perfumes
-          </p>
-        </div>
-        <div className="relative">
-          <div className="h-[420px] rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-transparent p-6">
-            <div className="flex h-full flex-col justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.5em] text-white/50">
-                  Placeholder
-                </p>
-                <h2 className="mt-4 text-2xl font-light text-white/90">
-                  Image reserved for hero artwork
-                </h2>
-              </div>
-              <div className="space-y-3 text-sm text-white/60">
-                <p>
-                  Use this canvas for campaign imagery or photography. Keep the
-                  palette monochrome to stay on brand.
-                </p>
-                <span className="inline-flex w-fit tracking-[0.5em] text-[10px] text-white/50">
-                  1400 &times; 900
-                </span>
-              </div>
-            </div>
-          </div>
+    <div className="text-gray-200">
+      {/* Hero */}
+      <section className="mx-auto max-w-6xl px-6 pb-16 pt-12 md:pt-20 text-center">
+        <h1 className="text-4xl font-light tracking-wide text-gray-100 md:text-5xl">
+          Ibrahim's Samples
+        </h1>
+        <hr className="mx-auto mt-6 w-24 border-gray-400/40" />
+        <div className="mt-10 flex justify-center gap-4">
+          <Link
+            to="/perfumes"
+            className="rounded-full border border-gray-300/60 px-6 py-3 text-sm uppercase tracking-[0.3em] text-gray-200 hover:border-gray-100 hover:text-gray-100 transition"
+          >
+            View Catalog
+          </Link>
+          <Link
+            to="/faq"
+            className="rounded-full border border-gray-400/30 px-6 py-3 text-sm uppercase tracking-[0.3em] text-gray-400 hover:text-gray-200 transition"
+          >
+            FAQ
+          </Link>
         </div>
       </section>
 
-      <section className="border-t border-white/5 px-6 py-20">
+      {/* Popular grid */}
+      <section className="border-t border-gray-400/20 px-6 py-16">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-white/50">
-                Popular right now
-              </p>
-              <h2 className="mt-4 text-3xl font-light text-white">
-                Clean silhouettes for every mood.
-              </h2>
-              <p className="mt-2 text-sm text-white/60">
-                Scroll to sample the most requested decants from our backend
-                catalog.
-              </p>
-            </div>
+            <h2 className="text-2xl font-light text-gray-100">Popular Perfumes</h2>
             <Link
               to="/perfumes"
-              className="text-xs uppercase tracking-[0.4em] text-white/70 hover:text-white"
+              className="text-xs uppercase tracking-[0.4em] text-gray-400 hover:text-gray-200 transition"
             >
               View All
             </Link>
           </div>
-          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {loading && (
               <>
                 {[...Array(3)].map((_, idx) => (
                   <div
                     key={idx}
-                    className="animate-pulse rounded-2xl border border-white/10 p-6"
+                    className="animate-pulse rounded-2xl border border-gray-400/20 p-6"
                   >
-                    <div className="h-6 w-1/2 rounded bg-white/10" />
-                    <div className="mt-4 h-4 w-3/4 rounded bg-white/5" />
-                    <div className="mt-8 h-32 rounded-xl bg-white/5" />
+                    <div className="h-6 w-1/2 rounded bg-gray-400/20" />
+                    <div className="mt-4 h-4 w-3/4 rounded bg-gray-400/10" />
+                    <div className="mt-8 h-32 rounded-xl bg-gray-400/10" />
                   </div>
                 ))}
               </>
             )}
             {!loading && error && (
-              <div className="rounded-2xl border border-white/10 p-6 text-sm text-white/70">
+              <div className="rounded-2xl border border-gray-400/20 p-6 text-sm text-gray-400">
                 {error}
               </div>
             )}
@@ -132,10 +86,10 @@ export default function Home() {
                   <Link
                     key={perfume.id}
                     to={`/perfumes/${perfume.id}`}
-                    className="group flex flex-col justify-between rounded-2xl border border-white/10 p-6 transition hover:border-white/30"
+                    className="group flex flex-col justify-between rounded-2xl border border-gray-400/20 p-6 transition hover:border-gray-400/50"
                   >
                     <div>
-                      <div className="overflow-hidden rounded-xl border border-white/10">
+                      <div className="overflow-hidden rounded-xl border border-gray-400/20">
                         <img
                           src={imageSrc}
                           alt={`${perfume.name} bottle`}
@@ -143,19 +97,19 @@ export default function Home() {
                           loading="lazy"
                         />
                       </div>
-                      <p className="mt-6 text-[10px] uppercase tracking-[0.4em] text-white/50">
+                      <p className="mt-6 text-[10px] uppercase tracking-[0.4em] text-gray-400">
                         {perfume.brand}
                       </p>
-                      <h3 className="mt-4 text-2xl font-light text-white">
+                      <h3 className="mt-2 text-2xl font-light text-gray-100">
                         {perfume.name}
                       </h3>
-                      <p className="mt-3 text-sm text-white/60">
+                      <p className="mt-2 text-sm text-gray-400">
                         {perfume.allowed_sizes
                           ? perfume.allowed_sizes.map((s) => `${s} ml`).join(" / ")
                           : "N/A"}
                       </p>
                     </div>
-                    <span className="mt-10 text-xs uppercase tracking-[0.4em] text-white/50 group-hover:text-white transition">
+                    <span className="mt-8 text-xs uppercase tracking-[0.4em] text-gray-400 group-hover:text-gray-200 transition">
                       Inspect →
                     </span>
                   </Link>
