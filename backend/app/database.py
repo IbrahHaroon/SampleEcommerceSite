@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 # Use DATABASE_URL env var in production (Supabase PostgreSQL).
 # Falls back to local SQLite for development.
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./perfumes.db")
+DATABASE_URL = os.getenv("DATABASE_URL") or "sqlite:///./perfumes.db"
 
 # Some providers (Heroku, older Supabase) emit postgres:// — SQLAlchemy needs postgresql://
 if DATABASE_URL.startswith("postgres://"):
