@@ -33,7 +33,7 @@ npm run lint       # ESLint
 | Layer    | Service  | Notes |
 |----------|----------|-------|
 | Frontend | Vercel   | Auto-deploy from `main`; set `VITE_*` env vars in Vercel dashboard |
-| Backend  | Railway  | Reads `backend/Procfile`; set all backend env vars in Railway dashboard |
+| Backend  | Vercel   | Python serverless via `backend/vercel.json`; set all backend env vars in Vercel dashboard |
 | Database | Supabase | PostgreSQL — managed via Supabase dashboard; Auth also handled by Supabase |
 
 ## Architecture
@@ -84,7 +84,7 @@ ALLOWED_ORIGINS       # Optional comma-separated extra CORS origins
 ### Frontend Env Vars (`frontend/.env`, see `.env.example`)
 
 ```
-VITE_API_URL            # Railway backend URL
+VITE_API_URL            # Vercel backend URL
 VITE_SUPABASE_URL       # https://your-ref.supabase.co
 VITE_SUPABASE_ANON_KEY  # Supabase anon/public key
 ```
